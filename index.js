@@ -6,7 +6,7 @@ const { Telegraf } = require("telegraf");
 
 
 // Create a bot that uses 'polling' to fetch new updates
-const bot = new Telegraf('5077995245:AAGQsZQEahFUSfTajrLT1JnWHNHzd_d61gI')
+const bot = new Telegraf('5146334838:AAEAsz-osFUSqvD3MRL3M06pJR165xXuRLQ')
 
 const apiID = 18796890
 const apiHash = '08e98815de6a777ae3c8d8f48d8a0575'
@@ -31,7 +31,7 @@ let message_count = {2084366462: 0, 1068773145: 0, 2124267259: 0}
   
   bot.on('message', (ctx) => {
    
-      if (chat_ids.includes(ctx.from.id) && ctx.chat.id == -1001553327875){
+      if (chat_ids.includes(ctx.from.id) && ctx.chat.id == -1001544419477){
         for (let i = 0; i < chat_ids.length; i++){
           if(chat_ids[i].toString() == ctx.from.id){
             
