@@ -11,8 +11,8 @@ const bot = new Telegraf('5146334838:AAEAsz-osFUSqvD3MRL3M06pJR165xXuRLQ')
 const apiID = 18796890
 const apiHash = '08e98815de6a777ae3c8d8f48d8a0575'
 
-let chat_ids = [1068773145, 1425493640, 5094659585, 5334283539, 1022738179, 2080115736, 1865475939, 1373670744, 1203502547]
-let message_count = {1068773145: 0, 1425493640: 0, 5094659585: 0, 5334283539: 0, 1022738179: 0, 2080115736: 0, 1865475939: 0, 1373670744: 0, 1203502547: 0}
+let chat_ids = [1068773145, 5094659585, 5334283539, 2080115736, 1865475939, 1373670744, 1203502547]
+let message_count = {1068773145: 0,  5094659585: 12, 5334283539: 0, 2080115736: 0, 1865475939: 0, 1373670744: 0, 1203502547: 0}
 
 
 
@@ -72,10 +72,10 @@ let message_count = {1068773145: 0, 1425493640: 0, 5094659585: 0, 5334283539: 0,
   bot.action('statistics', (ctx) => {
     ctx.telegram.sendMessage(ctx.chat.id, `
     Wirelex = ${message_count[1068773145]} 
-    \nTega = ${message_count[1425493640]}
+    
     \nAbdulmojeed = ${message_count[5094659585]}
     \nDavies Adedam = ${message_count[5334283539]}
-    \nJohn Legend = ${message_count[1022738179]}
+    
     \nShmu'el = ${message_count[2080115736]}
     \nTechmonk = ${message_count[1865475939]}
     \nBobby = ${message_count[1373670744]}
