@@ -1,22 +1,16 @@
 require('dotenv').config()
-
-
 const { Telegraf } = require("telegraf");
 
-
-
 // Create a bot that uses 'polling' to fetch new updates
-const bot = new Telegraf('5146334838:AAEAsz-osFUSqvD3MRL3M06pJR165xXuRLQ')
+const bot = new Telegraf(process.env.bot_token)
 
-const apiID = 18796890
-const apiHash = '08e98815de6a777ae3c8d8f48d8a0575'
+// An array of ids of all the  users that you want to monitor their message counts 
+// The array would look like this [1121334,323343243,43233222]
+let chat_ids = JSON.parse(process.env.users_chat_ids)
 
-let chat_ids = [1068773145, 5094659585, 5334283539, 2080115736, 1865475939, 1373670744, 1203502547]
-let message_count = {1068773145: 0,  5094659585: 0, 5334283539: 0, 2080115736: 0, 1865475939: 0, 1373670744: 0, 1203502547: 0}
-
-
-
-
+// An object with the usernames/ids assigned an initial value of 0 message count
+// The object will look like this {"user1": 0, "user2":0, "user3": 0}
+let message_count = JSON.parse(process.env.users_message_count_obj)
 
   bot.start((ctx) => {
   if (chat_ids.includes(ctx.chat.id)){
@@ -31,8 +25,7 @@ let message_count = {1068773145: 0,  5094659585: 0, 5334283539: 0, 2080115736: 0
   })
   
   bot.on('message', (ctx) => {
-   
-      if (chat_ids.includes(ctx.from.id) && ctx.chat.id == -1001544419477){
+      if (chat_ids.includes(ctx.from.id) && ctx.chat.id == process.env.groupChat_id){
         for (let i = 0; i < chat_ids.length; i++){
           if(chat_ids[i].toString() == ctx.from.id){
             
@@ -44,7 +37,10 @@ let message_count = {1068773145: 0,  5094659585: 0, 5334283539: 0, 2080115736: 0
   })
 
   bot.action('messages', (ctx) => {
-    if (chat_ids.includes(ctx.chat.id) && ctx.chat.id == 1068773145){
+    // If the user currently interacting with the bot is an admin in the group he/she would be shown an inline keyboard 
+    // "message" and "statistics" button (the messages button can be used to reset all users messages count back to zero,
+    // while the statistics button will show the current message count of every user)
+    if (chat_ids.includes(ctx.chat.id) && ctx.chat.id == process.env.groupChat_admin_id){
       
       ctx.telegram.sendMessage(ctx.chat.id, `${message_count[ctx.from.id]} messages posted`,{
         reply_markup: {
@@ -57,6 +53,10 @@ let message_count = {1068773145: 0,  5094659585: 0, 5334283539: 0, 2080115736: 0
       for(let index = 0; index < chat_ids.length; index++){
         message_count[chat_ids[index]] = 0
       }
+
+    // If the person interacting with the bot is not an admin in the group but is part of the users whose message count
+    // is being monitored, the user will be shown an inline keyboard "statistics" button which would display his/her 
+    // current message count when clicked
     } else if (chat_ids.includes(ctx.chat.id)){
       ctx.telegram.sendMessage(ctx.chat.id, `${message_count[ctx.from.id]} messages posted`,{
         reply_markup: {
@@ -70,16 +70,7 @@ let message_count = {1068773145: 0,  5094659585: 0, 5334283539: 0, 2080115736: 0
     })
 
   bot.action('statistics', (ctx) => {
-    ctx.telegram.sendMessage(ctx.chat.id, `
-    Wirelex = ${message_count[1068773145]} 
-    
-    \nAbdulmojeed = ${message_count[5094659585]}
-    \nDavies Adedam = ${message_count[5334283539]}
-    
-    \nShmu'el = ${message_count[2080115736]}
-    \nTechmonk = ${message_count[1865475939]}
-    \nBobby = ${message_count[1373670744]}
-    \nPolymorph = ${message_count[1203502547]}`,{
+    ctx.telegram.sendMessage(ctx.chat.id, message_count,{
       reply_markup: {
         inline_keyboard: [
           [{text: 'messages', callback_data: 'messages'}, {text: 'statistics', callback_data: 'statistics'}]
@@ -88,7 +79,7 @@ let message_count = {1068773145: 0,  5094659585: 0, 5334283539: 0, 2080115736: 0
     })
   })
 
- 
+
 
 bot.launch()
 
